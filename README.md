@@ -1,2 +1,2 @@
-# David-s-Album-Collection
+# Album-Collection
 My Album Collection
