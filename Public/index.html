@@ -1,0 +1,97 @@
+<!doctype html>
+
+<html ng-app="albumModule">
+    <head>
+        <!-- META -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+        <title>David's Album Collection</title>
+        <!-- FRAMEWORKS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"><!-- load bootstrap -->
+        <!-- LIBRARIES -->
+        <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script><!-- load jquery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.min.js"></script><!-- load angular -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+        <script src="core.js"></script>
+    </head>
+    <body ng-controller="mainController" style="background:#A0CECB">
+
+        <!-- MAIN UI -->
+        <br></br>
+        <div class="container">
+            <h1>David's Album Collection</h1>
+            <h3>Current Size: {{ albums.length }} Albums</h3>
+            <br></br>
+
+            <!-- ADD A NEW ALBUM -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#albumModal">
+                Add New Album
+            </button>
+
+            <button type="button" class="btn btn-warning">
+                Update Album
+            </button>
+
+            <button type="button" class="btn btn-danger">
+                Delete Album
+            </button>
+            <br></br>
+
+            <!-- DISPLAY ALL ALBUMS -->
+            <div ng-repeat="album in albums | orderBy: 'artist'">
+                <label>{{ album.title }} - {{album.artist}} </label>
+            </div>
+            <br></br>
+
+            <!-- MODAL -->
+            <div class="modal fade" id="albumModal" tabindex="-1" role="dialog" aria-labelledby="albumModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="albumModalLabel">New Album</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form name="newAlbumForm" autocomplete="off">
+                                <center style="color: red">All Fields Required</center>
+                                <p></p>
+                                <center><div ng-show="show" class="alert alert-danger">Album already exists</div></center>
+                                <div class="form-group">
+                                    <label for="title">Title</label>
+                                    <input type="text" class="form-control" id="title" ng-model="formData.title" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="artist">Artist</label>
+                                    <input type="text" class="form-control" id="artist" ng-model="formData.artist" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="year">Year</label>
+                                    <input type="text" class="form-control" id="year" ng-model="formData.year" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="genre">Genre</label>
+                                    <input type="text" class="form-control" id="genre" ng-model="formData.genre" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tracks">Tracks</label>
+                                    <input type="text" class="form-control" id="tracks" ng-model="formData.tracks" required>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-warning" ng-click="formData={}">Clear All</button>
+                                    <button id ="submit" type="submit" class="btn btn-success" ng-click="newAlbumForm.$valid && newAlbum()">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br></br>
+
+    </body>
+
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "davids-album-collection",
+  "version": "1.0.0",
+  "description": "Project showcasing my album collection",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Han",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "express": "^4.14.1",
+    "mongoose": "^4.8.3",
+    "morgan": "^1.8.1",
+    "nodemon": "^1.11.0"
+  }
+}
