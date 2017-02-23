@@ -8,6 +8,7 @@
         <title>David's Album Collection</title>
         <!-- FRAMEWORKS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"><!-- load bootstrap -->
+        <link rel="stylesheet" type="text/css" href="main.css">
         <!-- LIBRARIES -->
         <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script><!-- load jquery -->
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.min.js"></script><!-- load angular -->
@@ -21,19 +22,24 @@
         <br></br>
         <div class="container">
             <h1>David's Album Collection</h1>
+            <div>
+                <img ng-show="michael" href="http://www.guinnessworldrecords.com/Images/Michael-Jordan-main_tcm25-15662.jpg">
+            </div>
             <h3>Current Size: {{ albums.length }} Albums</h3>
             <br></br>
 
             <!-- ADD A NEW ALBUM -->
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#albumModal">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newAlbumModal">
                 Add New Album
             </button>
-
+            
+            <!-- UPDATE AN ALBUM -->
             <button type="button" class="btn btn-warning">
                 Update Album
             </button>
 
-            <button type="button" class="btn btn-danger">
+            <!-- DELETE AN ALBUM -->
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteAlbumModal">
                 Delete Album
             </button>
             <br></br>
@@ -44,8 +50,8 @@
             </div>
             <br></br>
 
-            <!-- MODAL -->
-            <div class="modal fade" id="albumModal" tabindex="-1" role="dialog" aria-labelledby="albumModalLabel" aria-hidden="true">
+            <!-- MODAL FOR ADDING NEW ALBUM -->
+            <div class="modal fade" id="newAlbumModal" tabindex="-1" role="dialog" aria-labelledby="newAlbumModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -82,7 +88,7 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="button" class="btn btn-warning" ng-click="formData={}">Clear All</button>
-                                    <button id ="submit" type="submit" class="btn btn-success" ng-click="newAlbumForm.$valid && newAlbum()">Submit</button>
+                                    <button id ="submit" type="submit" value="submit" class="btn btn-success" ng-click="newAlbumForm.$valid && newAlbum()">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -90,6 +96,47 @@
                 </div>
             </div>
         </div>
+
+        <!-- MODAL FOR DELETING ALBUMS -->
+        <div class="modal fade" id="deleteAlbumModal" tabindex="-1" role="dialog" aria-labelledby="deleteAlbumModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteAlbumModalLabel">Delete Album</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="albumOption" ng-repeat="album in albums | orderBy: 'artist'">
+                            <center><button type="button" class="btn btn-default btn-block" data-dismiss="modal" data-toggle="modal" data-target='#deleteModal' ng-click="deleteAlbum(album._id)">{{album.title}} - {{album.artist}}</button></center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Are you sure you want to delete?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <center>
+                                <button type="button" data-dismiss="modal" class="btn btn-success btn-lg" ng-click="deleteAlbum()">Yes</button>
+                                <button type="button" data-dismiss="modal" class="btn btn-warning btn-lg">No</button>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        -->
+
         <br></br>
 
     </body>

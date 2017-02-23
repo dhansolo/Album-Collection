@@ -3,16 +3,21 @@ var albumModule = angular.module('albumModule', []);
 albumModule.controller('mainController', ['$scope', '$http', function($scope, $http) {
     $scope.formData = {};
     $scope.show = false;
+    $scope.michael = false;
+    var size;
 
     // GET ALL ALBUMS
-    $http.get('/albums')
-        .then(function(success) {
-            $scope.albums = success.data;
-            //console.log(success.data);
-            //console.log($scope);
-        }, function(error) {
-            console.log('Error: ' + error.data);
-        });
+    $scope.getAlbums = function() {
+        $http.get('/albums')
+            .then(function(success) {
+                $scope.albums = success.data;
+            }, function(error) {
+                console.log('Error: ' + error.data);
+            });
+    }
+
+    $scope.getAlbums();
+
 
     // ADD A NEW ALBUM AND RE-GET ALBUMS TO UPDATE THE VIEW
     $scope.newAlbum = function() {
@@ -20,32 +25,41 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
             .then(function(success) {
                 $scope.formData = {};
                 $scope.albums = success.data;
-                console.log(success.data);
-                $('#albumModal').modal('hide');
+                $('#newAlbumModal').modal('hide');
             }, function(error) {
                 console.log('Error: ' + error.data);
                 $scope.formData = {};
                 $scope.show = true;
             })
-        $http.get('/albums')
-            .then(function(success) {
-                $scope.albums = success.data;
-            }, function(error) {
-                console.log('Error: ' + error.data);
-            });
+        $scope.getAlbums();
     }
 
     // UPDATE AN ALBUM'S DETAIL AND RE-GET ALBUMS TO UPDATE THE VIEW
     $scope.updateAlbum = function() {
         $http.put('/album/:id', $scope.formData)
-
-        $http.get('/albums')
             .then(function(success) {
                 $scope.albums = success.data;
+                console.log(success.data);
             }, function(error) {
                 console.log('Error: ' + error.data);
             });
+        $scope.getAlbums();
     }
+
+    // DELETE AN ALBUM AND REFRESH
+    $scope.deleteAlbum = function(id) {
+        console.log(id);
+        $scope.data = id;
+        console.log($scope.data);
+        $http.delete('/album/' + id)
+            .then(function(success) {
+                $scope.albums = success.data;
+                console.log(success.data);
+            }, function(error) {
+                console.log('Error: ' + error.data);
+            });
+        $scope.getAlbums();
+    };
 
 }]);
 
