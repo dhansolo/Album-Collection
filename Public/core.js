@@ -5,7 +5,7 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
     $scope.name = "David"
     $scope.show = false;
     $scope.art = false;
-    $scope.spotify;
+    $scope.preview;
 
     /* -------------------- RESTful API -------------------- */
 
@@ -21,6 +21,16 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
 
     $scope.getAlbums();
 
+    // GET A ALBUM
+    $scope.getAlbum = function(id) {
+        $http.get('/albums/' + id) 
+            .then(function(success) {
+                console.log(success.data);
+                $scope.album = success.data;
+            }, function(error) {
+                console.log('Error: ' + error.data);
+            });
+    }
 
     // ADD A NEW ALBUM AND RE-GET ALBUMS TO UPDATE THE VIEW
     $scope.newAlbum = function() {
@@ -76,22 +86,32 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
     /* -------------------- SPOTIFY INTEGRATION -------------------- */
 
     //GET ALBUM ART FROM SPOTIFY
-    $scope.getAlbum = function(title, artist) {
+    $scope.getSpotifyAlbum = function(title, artist) {
         $http.get('https://api.spotify.com/v1/search?q=' + title + '+' + artist + '&type=album&limit1')
             .then(function(success) {
-                //console.log('found');
-                //console.log(success.data);
                 $scope.art = true;
-                $scope.spotify = success.data.albums.items[0];
                 $('#albumArt').attr("src", success.data.albums.items[0].images[0].url);
-                //return success.data;
+                $http.get('https://api.spotify.com/v1/albums/' + success.data.albums.items[0].id)
+                    .then(function(success) {
+                        $scope.preview = success.data.tracks.items[1].preview_url;
+                    }, function(error) {
+                        console.log('Error: ' + error.data);
+                    });
             }, function(error) {
                 console.log('Error: ' + error.data);
             });
     }
     //PLAY PREVIEW OF ALBUM
-    $scope.playPreview = function(title, artist) {
-        console.log($scope.preview);
+    $scope.togglePreview = function() {
+        var audio = new Audio($scope.preview);
+        var playing = false;
+        if(playing) {
+            audio.pause();
+            playing = false;
+        } else {
+            audio.play();
+            playing = true;
+        };
     }
 
 }]);

@@ -39,18 +39,19 @@
             <!-- DISPLAY ALL ALBUMS -->
             <div class="row">
                 <div class="col-md-4" id="albumWindow" style="width:auto;">
-                    <div id="windowContent" ng-repeat="album in albums | orderBy: 'artist'">
-                        <button class="btn btn-custom btn-md" style="margin: 2px" ng-click="getAlbum(album.title, album.artist)">{{ album.title }} - {{album.artist}} </button>
+                    <div id="windowContent" ng-repeat="album in albums">
+                        <button class="btn btn-custom btn-md" style="margin: 2px" ng-selected="albums[0]" ng-click="getSpotifyAlbum(album.title, album.artist); getAlbum(album._id)">{{ album.title }} - {{album.artist}}</button>
                     </div>
                 </div>
                 <div class="col-md-1"></div>
                 <div class="col-md-7" style="display: inline">
-                    <a ng-click("playPreview(album.title, album.artist)")>
-                        <img id="albumArt" ng-show="art">
-                    </a>
+                    <img id="albumArt" height=400px width=400px ng-show="art" ng-click="togglePreview()">
                     <p></p>
-                    <h3>{{spotify.name}}</h3>
-                    <h3>{{spotify.artists[0].name}}</h3>
+                    <h4>{{album.title}}</h4>
+                    <h4>{{album.artist}}</h4>
+                    <h4>{{album.year}}</h4>
+                    <h4>{{album.genre}}</h4>
+                    <h4>{{album.tracks}}</h4>
                 </div>
             </div>
             <br></br>
@@ -114,7 +115,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body" id="albumOption" ng-repeat="album in albums | orderBy: 'artist'">
+                        <div class="modal-body" id="albumOption" ng-repeat="album in albums">
                             <center><button type="button" class="btn btn-secondary btn-block" ng-click="deleteAlbum(album._id)">{{album.title}} - {{album.artist}}</button></center>
                         </div>
                     </div>
@@ -123,22 +124,6 @@
         </div>
         
         <!-- MODAL FOR UPDATING ALBUMS -->
-        <div class="modal fade" id="updateAlbumModal" tabindex="-1" role="dialog" aria-labelledby="updateAlbumModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="updateAlbumModalLabel">Update Album</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body" id="albumOption" ng-repeat="album in albums | orderBy: 'artist'">
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <br></br>
 
