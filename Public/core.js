@@ -2,9 +2,12 @@ var albumModule = angular.module('albumModule', []);
 
 albumModule.controller('mainController', ['$scope', '$http', function($scope, $http) {
     $scope.formData = {};
+    $scope.name = "David"
     $scope.show = false;
-    $scope.michael = false;
-    var size;
+    $scope.art = false;
+    $scope.spotify;
+
+    /* -------------------- RESTful API -------------------- */
 
     // GET ALL ALBUMS
     $scope.getAlbums = function() {
@@ -30,6 +33,11 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
                 console.log('Error: ' + error.data);
                 $scope.formData = {};
                 $scope.show = true;
+                setTimeout(function () {
+                    $scope.$apply(function() {
+                        $scope.show = false;
+                    });
+                }, 5000);
             })
         $scope.getAlbums();
     }
@@ -40,6 +48,7 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
             .then(function(success) {
                 $scope.albums = success.data;
                 console.log(success.data);
+                $('#updateAlbumModal').modal('hide');
             }, function(error) {
                 console.log('Error: ' + error.data);
             });
@@ -51,17 +60,42 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
         console.log(id);
         $scope.data = id;
         console.log($scope.data);
-        $http.delete('/album/' + id)
+        if(confirm("Are you sure you want to delete the selected album?")) {
+            $http.delete('/album/' + id)
+                .then(function(success) {
+                    $scope.albums = success.data;
+                    console.log(success.data);
+                }, function(error) {
+                    console.log('Error: ' + error.data);
+                });
+            $('#deleteAlbumModal').modal('hide');
+            $scope.getAlbums();
+        }
+    };
+
+    /* -------------------- SPOTIFY INTEGRATION -------------------- */
+
+    //GET ALBUM ART FROM SPOTIFY
+    $scope.getAlbum = function(title, artist) {
+        $http.get('https://api.spotify.com/v1/search?q=' + title + '+' + artist + '&type=album&limit1')
             .then(function(success) {
-                $scope.albums = success.data;
-                console.log(success.data);
+                //console.log('found');
+                //console.log(success.data);
+                $scope.art = true;
+                $scope.spotify = success.data.albums.items[0];
+                $('#albumArt').attr("src", success.data.albums.items[0].images[0].url);
+                //return success.data;
             }, function(error) {
                 console.log('Error: ' + error.data);
             });
-        $scope.getAlbums();
-    };
+    }
+    //PLAY PREVIEW OF ALBUM
+    $scope.playPreview = function(title, artist) {
+        console.log($scope.preview);
+    }
 
 }]);
+
 
 /* --------------------------------------------------OLD CODE BELOW --------------------------------------------------*/
 

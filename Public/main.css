@@ -1,7 +1,15 @@
-#albumOption:hover {
+#albumOption:hover{
     background-color: #A0CECB;
 }
 
 #albumOption {
     padding: 2px;
+}
+
+.btn-custom {
+    background-color: white;
+}
+
+.btn-custom:hover {
+    background-color: #3BAFDA;
 }

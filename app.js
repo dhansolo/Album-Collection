@@ -1,7 +1,10 @@
 /*
 
 THINGS TO DO:
-- ADD FEATURE TO UPDATE ALBUM DETAILS
+- INTEGRATE SPOTIFY API
+- ADD FEATURE TO UPDATE ALBUM DETAILS?
+- MORE DETAILED VALIDATION
+- SEARCH FEATURE
 
 */
 
@@ -97,8 +100,13 @@ app.post('/album', function(req, res) {
 app.put('/album/:id', function(req, res) {
     Album.findOneAndUpdate({
         _id: req.params.id
-    }, 
-    {$set:{title: req.body.title}}, 
+    }, { $set: {
+            title: req.body.title,
+            artist: req.body.artist,
+            year: req.body.year,
+            genre: red.body.genre,
+            tracks: req.body.tracks
+        }}, 
         {upsert: true},
         function(err, newAlbum) {
             if(err) {
@@ -122,7 +130,6 @@ app.delete('/album/:id', function(req, res) {
         }
     })
 });
-
 
 app.listen(port, function() {
    console.log("app listening on port " + port);
