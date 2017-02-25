@@ -13,3 +13,7 @@
 .btn-custom:hover {
     background-color: #3BAFDA;
 }
+
+.playing {
+    border: 5px solid #E9573F;
+}

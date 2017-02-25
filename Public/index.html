@@ -40,23 +40,27 @@
             <div class="row">
                 <div class="col-md-4" id="albumWindow" style="width:auto;">
                     <div id="windowContent" ng-repeat="album in albums">
-                        <button class="btn btn-custom btn-md" style="margin: 2px" ng-selected="albums[0]" ng-click="getSpotifyAlbum(album.title, album.artist); getAlbum(album._id)">{{ album.title }} - {{album.artist}}</button>
+                        <button class="btn btn-custom btn-md" value="{{album._id}}" style="margin: 2px" ng-click="getAlbum(album._id)">{{ album.title }} - {{album.artist}}</button>
                     </div>
                 </div>
                 <div class="col-md-1"></div>
                 <div class="col-md-7" style="display: inline">
-                    <img id="albumArt" height=400px width=400px ng-show="art" ng-click="togglePreview()">
+                    <img id="albumArt" height=450px width=450px ng-show="art" ng-click="togglePreview()">
                     <p></p>
-                    <h4>{{album.title}}</h4>
-                    <h4>{{album.artist}}</h4>
-                    <h4>{{album.year}}</h4>
-                    <h4>{{album.genre}}</h4>
-                    <h4>{{album.tracks}}</h4>
+                    <h3>{{album.title}}</h3>
+                    <h5>Artist: {{album.artist}}</h5>
+                    <h5>Year Released: {{album.year}}</h5>
+                    <h5>Genre: {{album.genre}}</h5>
+                    <h5>{{album.tracks}} Tracks</h5>
                 </div>
             </div>
-            <br></br>
 
-            <br></br>
+            <p></p>
+
+            <!-- FOOTER -->
+            <footer>
+                <a href="https://www.davidhan.me">Created by David Han</a>
+            </footer>
 
             <!-- MODAL FOR ADDING NEW ALBUM -->
             <div class="modal fade" id="newAlbumModal" tabindex="-1" role="dialog" aria-labelledby="newAlbumModalLabel" aria-hidden="true">
@@ -122,8 +126,6 @@
                 </div>
             </div>
         </div>
-        
-        <!-- MODAL FOR UPDATING ALBUMS -->
 
         <br></br>
 
