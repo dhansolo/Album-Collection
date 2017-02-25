@@ -45,13 +45,21 @@
                 </div>
                 <div class="col-md-1"></div>
                 <div class="col-md-7" style="display: inline">
-                    <img id="albumArt" height=450px width=450px ng-show="art" ng-click="togglePreview()">
+                    <img id="albumArt" height=400px width=400px ng-show="art" ng-click="togglePreview()">
                     <p></p>
                     <h3>{{album.title}}</h3>
                     <h5>Artist: {{album.artist}}</h5>
                     <h5>Year Released: {{album.year}}</h5>
                     <h5>Genre: {{album.genre}}</h5>
                     <h5>{{album.tracks}} Tracks</h5>
+                    <div>
+                        <button class="btn btn-warning" data-toggle="modal" data-target="#updateAlbumModal">
+                            Update Album
+                        </button>
+                        <button class="btn btn-success">
+                            Listen on Spotify
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -121,6 +129,52 @@
                         </div>
                         <div class="modal-body" id="albumOption" ng-repeat="album in albums">
                             <center><button type="button" class="btn btn-secondary btn-block" ng-click="deleteAlbum(album._id)">{{album.title}} - {{album.artist}}</button></center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL FOR UPDATING ALBUMS -->
+        <div class="modal fade" id="updateAlbumModal" tabindex="-1" role="dialog" aria-labelledby="updateAlbumModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateAlbumModalLabel">Update Album</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form name="newAlbumForm" autocomplete="off">
+                                <center style="color: red">All Fields Required</center>
+                                <p></p>
+                                <div class="form-group">
+                                    <label for="title">Title</label>
+                                    <input type="text" class="form-control" id="title" ng-model="formData.title" value="wjekfnkwje" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="artist">Artist</label>
+                                    <input type="text" class="form-control" id="artist" ng-model="formData.artist" value="{{album.artist}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="year">Year</label>
+                                    <input type="text" class="form-control" id="year" ng-model="formData.year" value="{{album.year}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="genre">Genre</label>
+                                    <input type="text" class="form-control" id="genre" ng-model="formData.genre" value="{{album.genre}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tracks">Tracks</label>
+                                    <input type="text" class="form-control" id="tracks" ng-model="formData.tracks" value="{{album.tracks}}"required>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-warning" ng-click="formData={}">Clear All</button>
+                                    <button id ="submit" type="submit" value="submit" class="btn btn-success" ng-click="newAlbumForm.$valid && newAlbum()">Submit</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

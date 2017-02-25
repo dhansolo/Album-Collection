@@ -16,7 +16,8 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
         $http.get('/albums')
             .then(function(success) {
                 $scope.albums = success.data;
-                firstID = success.data[0]._id;
+                var randNum = Math.floor(Math.random() * ($scope.albums.length -1));
+                firstID = success.data[randNum]._id;
                 $scope.getAlbum(firstID);
             }, function(error) {
                 console.log('Error: ' + error.data);
@@ -111,8 +112,10 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
 
     $scope.togglePreview = function() {
         var audio = new Audio($scope.preview);
-        audio.play();
         $('#albumArt').addClass('playing');
+        if($('#albumArt').hasClass('playing')) {
+            audio.play();
+        }
         audio.addEventListener('ended', function() {
             $('#albumArt').removeClass('playing');
         });
