@@ -38,14 +38,15 @@
 
             <!-- DISPLAY ALL ALBUMS -->
             <div class="row">
-                <div class="col-md-4" id="albumWindow" style="width:auto;">
+                <div class="col-md-6" id="albumWindow" style="height:625px; width:400px; overflow-y:auto;">
                     <div id="windowContent" ng-repeat="album in albums">
-                        <button class="btn btn-custom btn-md" value="{{album._id}}" style="margin: 2px" ng-click="getAlbum(album._id)">{{ album.title }} - {{album.artist}}</button>
+                        <button id="albumButton" class="btn btn-custom btn-block" style="margin: 2px" ng-click="getAlbum(album._id)">
+                            {{ album.title }} - {{album.artist}}
+                        </button>
                     </div>
                 </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-7" style="display: inline">
-                    <img id="albumArt" height=400px width=400px ng-show="art" ng-click="togglePreview()">
+                <div class="col-md-6" style="display: inline">
+                    <img id="albumArt" height=420px width=420px ng-show="art" ng-click="togglePreview()">
                     <p></p>
                     <h3>{{album.title}}</h3>
                     <h5>Artist: {{album.artist}}</h5>
@@ -53,12 +54,14 @@
                     <h5>Genre: {{album.genre}}</h5>
                     <h5>{{album.tracks}} Tracks</h5>
                     <div>
+                        <!--
                         <button class="btn btn-warning" data-toggle="modal" data-target="#updateAlbumModal">
                             Update Album
                         </button>
-                        <button class="btn btn-success">
+                        -->
+                        <a href="{{spotifyURL}}"><button class="btn btn-success">
                             Listen on Spotify
-                        </button>
+                        </button></a>
                     </div>
                 </div>
             </div>
@@ -67,7 +70,8 @@
 
             <!-- FOOTER -->
             <footer>
-                <a href="https://www.davidhan.me">Created by David Han</a>
+                <a href="https://www.spotify.com"><img style="height:3%;width:3%" src="pics/spotify.png"></a> | Created by
+                <a href="https://www.davidhan.me">David Han</a> 
             </footer>
 
             <!-- MODAL FOR ADDING NEW ALBUM -->
@@ -146,33 +150,32 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form name="newAlbumForm" autocomplete="off">
-                                <center style="color: red">All Fields Required</center>
+                            <form name="updateAlbumForm" autocomplete="off">
                                 <p></p>
                                 <div class="form-group">
                                     <label for="title">Title</label>
-                                    <input type="text" class="form-control" id="title" ng-model="formData.title" value="wjekfnkwje" required>
+                                    <input type="text" class="form-control" id="title" value="{{album.title}}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="artist">Artist</label>
-                                    <input type="text" class="form-control" id="artist" ng-model="formData.artist" value="{{album.artist}}" required>
+                                    <input type="text" class="form-control" id="artist" value="{{album.artist}}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="year">Year</label>
-                                    <input type="text" class="form-control" id="year" ng-model="formData.year" value="{{album.year}}" required>
+                                    <input type="text" class="form-control" id="year" value="{{album.year}}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="genre">Genre</label>
-                                    <input type="text" class="form-control" id="genre" ng-model="formData.genre" value="{{album.genre}}" required>
+                                    <input type="text" class="form-control" id="genre" value="{{album.genre}}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="tracks">Tracks</label>
-                                    <input type="text" class="form-control" id="tracks" ng-model="formData.tracks" value="{{album.tracks}}"required>
+                                    <input type="text" class="form-control" id="tracks" value="{{album.tracks}}"required>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="button" class="btn btn-warning" ng-click="formData={}">Clear All</button>
-                                    <button id ="submit" type="submit" value="submit" class="btn btn-success" ng-click="newAlbumForm.$valid && newAlbum()">Submit</button>
+                                    <button id ="submit" type="submit" value="submit" class="btn btn-success" ng-click="updateAlbumForm.$valid && updateAlbum(album._id)">Submit</button>
                                 </div>
                             </form>
                         </div>

@@ -1,13 +1,11 @@
 /*
 
 THINGS TO DO:
-- INTEGRATE SPOTIFY API EVEN MORE
+- INTEGRATE SPOTIFY API EVEN MORE?
 - ADD FEATURE TO UPDATE ALBUM DETAILS?
 - MORE DETAILED VALIDATION
-- SEARCH FEATURE
-- INITIALIZE APP WITH DEFAULT SELECTED ALBUM
 - FIGURE OUT AUDIO TOGGLE
-- CLEAN UP UI
+- PAUSE AUDIO WHEN NEW ALBUM IS SELECTED
 
 */
 
@@ -35,7 +33,7 @@ app.get('/', function(req, res) {
 })
 
 app.get('/albums', function(req, res) {
-    console.log('Getting all albums');
+    //console.log('Getting all albums');
     Album.find({})
         .exec(function(err, albums) {
             if(err){
@@ -48,7 +46,7 @@ app.get('/albums', function(req, res) {
 });
 
 app.get('/albums/:id', function(req, res) {
-    console.log('Getting one album by ID');
+    //console.log('Getting one album by ID');
     Album.findOne({
         _id: req.params.id
     })
@@ -82,9 +80,9 @@ app.post('/album', function(req, res) {
         
         }, 
         function(err, item) {
-            console.log(item);
+            //console.log(item);
             if(!item) {
-                console.log('album does not exist');
+                //console.log('album does not exist');
                 newAlbum.save(function(err, album) {
                     if(err) {
                         res.send('error saving album: ' + err);
@@ -94,7 +92,7 @@ app.post('/album', function(req, res) {
                     }
                 });
             } else {
-                console.log('album exists');
+                //console.log('album exists');
                 res.status(500).send('Album Exists');
             }
         });
@@ -102,12 +100,11 @@ app.post('/album', function(req, res) {
 
 app.put('/album/:id', function(req, res) {
     Album.findOneAndUpdate({
-        _id: req.params.id
-    }, { $set: {
+        _id: req.params.id}, { $set: {
             title: req.body.title,
             artist: req.body.artist,
             year: req.body.year,
-            genre: red.body.genre,
+            genre: req.body.genre,
             tracks: req.body.tracks
         }}, 
         {upsert: true},

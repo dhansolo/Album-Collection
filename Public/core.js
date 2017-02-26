@@ -6,6 +6,8 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
     $scope.show = false;
     $scope.art = false;
     $scope.preview;
+    $scope.spotifyURL;
+    $scope.selected;
     var firstID;
     var isPlaying = false;
 
@@ -32,6 +34,9 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
             .then(function(success) {
                 $scope.album = success.data;
                 $scope.getSpotifyAlbum($scope.album.title, $scope.album.artist);
+                $scope.selected = $scope.album._id;
+                $('#albumArt').removeClass('playing');
+                isPlaying = false;
             }, function(error) {
                 console.log('Error: ' + error.data);
             });
@@ -44,6 +49,7 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
                 $scope.formData = {};
                 $scope.albums = success.data;
                 $('#newAlbumModal').modal('hide');
+                $scope.getAlbums();
             }, function(error) {
                 console.log('Error: ' + error.data);
                 $scope.formData = {};
@@ -54,20 +60,18 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
                     });
                 }, 5000);
             })
-        $scope.getAlbums();
     }
 
     // UPDATE AN ALBUM'S DETAIL AND REFRESH ALBUMS TO UPDATE THE VIEW
-    $scope.updateAlbum = function() {
-        $http.put('/album/:id', $scope.formData)
+    $scope.updateAlbum = function(id) {
+        console.log(id);
+        $http.put('/album/' + id, $scope.formData)
             .then(function(success) {
                 $scope.albums = success.data;
-                console.log(success.data);
                 $('#updateAlbumModal').modal('hide');
             }, function(error) {
                 console.log('Error: ' + error.data);
             });
-        $scope.getAlbums();
     }
 
     // DELETE AN ALBUM AND REFRESH
@@ -95,6 +99,7 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
         $http.get('https://api.spotify.com/v1/search?q=' + title + '+' + artist + '&type=album&limit=1')
             .then(function(success) {
                 $scope.art = true;
+                $scope.spotifyURL = success.data.albums.items[0].external_urls.spotify;
                 $('#albumArt').attr("src", success.data.albums.items[0].images[0].url);
                 $http.get('https://api.spotify.com/v1/albums/' + success.data.albums.items[0].id)
                     .then(function(success) {
@@ -108,13 +113,17 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
             });
     }
 
-    //PLAY PREVIEW OF ALBUM
-
+    //PLAY PREVIEW OF ALBUM FROM SPOTIFY
     $scope.togglePreview = function() {
-        var audio = new Audio($scope.preview);
-        $('#albumArt').addClass('playing');
-        if($('#albumArt').hasClass('playing')) {
+        isPlaying = !isPlaying;
+        if(isPlaying) {
+            $('#albumArt').addClass('playing');
+            var audio = new Audio($scope.preview);
             audio.play();
+        } else {
+            $('#albumArt').removeClass('playing');
+            var audio = new Audio($scope.preview);
+            audio.pause();
         }
         audio.addEventListener('ended', function() {
             $('#albumArt').removeClass('playing');
