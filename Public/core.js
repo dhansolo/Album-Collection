@@ -8,6 +8,7 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
     $scope.preview;
     $scope.spotifyURL;
     $scope.selected;
+    var audio;
     var firstID;
     var isPlaying = false;
 
@@ -37,6 +38,7 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
                 $scope.selected = $scope.album._id;
                 $('#albumArt').removeClass('playing');
                 isPlaying = false;
+                audio.pause();
             }, function(error) {
                 console.log('Error: ' + error.data);
             });
@@ -103,8 +105,9 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
                 $('#albumArt').attr("src", success.data.albums.items[0].images[0].url);
                 $http.get('https://api.spotify.com/v1/albums/' + success.data.albums.items[0].id)
                     .then(function(success) {
-                        var randNum = Math.floor(Math.random() * 10) + 1;
+                        var randNum = Math.floor(Math.random() * 10);
                         $scope.preview = success.data.tracks.items[randNum].preview_url;
+                        audio = new Audio($scope.preview);
                     }, function(error) {
                         console.log('Error: ' + error.data);
                     });
@@ -118,12 +121,11 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
         isPlaying = !isPlaying;
         if(isPlaying) {
             $('#albumArt').addClass('playing');
-            var audio = new Audio($scope.preview);
             audio.play();
         } else {
             $('#albumArt').removeClass('playing');
-            var audio = new Audio($scope.preview);
             audio.pause();
+            audio.currentTime = 0;
         }
         audio.addEventListener('ended', function() {
             $('#albumArt').removeClass('playing');
