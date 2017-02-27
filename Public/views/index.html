@@ -8,22 +8,23 @@
         <title>Album Collection</title>
         <!-- FRAMEWORKS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"><!-- load bootstrap -->
-        <link rel="stylesheet" type="text/css" href="main.css">
+        <link rel="stylesheet" type="text/css" href="css/main.css">
         <!-- LIBRARIES -->
         <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script><!-- load jquery -->
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.min.js"></script><!-- load angular -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-        <script src="core.js"></script>
+        <script src="js/core.js"></script>
     </head>
-    <body ng-controller="mainController" style="background:#A0CECB">
+    <body ng-controller="mainController" style="background-color:#A0CECB">
 
         <!-- MAIN UI -->
+        <br></br>
         <br></br>
         <div class="container" style="color: #3C3B3D">
             <h1>{{name}}'s Album Collection</h1>
             <h3>Current Size: {{ albums.length }} Albums</h3>
-            <br></br>
+            <p></p>
 
             <!-- ADD A NEW ALBUM -->
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newAlbumModal">
@@ -31,37 +32,44 @@
             </button>
 
             <!-- DELETE AN ALBUM -->
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteAlbumModal">
+            <button type="button" class="btn btn-danger" ng-show="showAlbums" data-toggle="modal" data-target="#deleteAlbumModal">
                 Delete Album
             </button>
-            <br></br>
+
+            <!--GET JSON DATA-->
+            <a href="/albums"><button type="button" class="btn btn-warning" ng-show="showAlbums">
+                Get JSON Data
+            </button></a>
+            <p></p>
 
             <!-- DISPLAY ALL ALBUMS -->
             <div class="row">
                 <div class="col-md-6" id="albumWindow" style="height:625px; width:400px; overflow-y:auto;">
-                    <div id="windowContent" ng-repeat="album in albums">
+                    <div id="windowContent" ng-repeat="album in albums | orderBy: 'artist'">
                         <button id="albumButton" class="btn btn-custom btn-block" style="margin: 2px" ng-click="getAlbum(album._id)">
-                            {{ album.title }} - {{album.artist}}
+                            <strong>{{ album.title }} - {{album.artist}}</strong>
                         </button>
                     </div>
                 </div>
                 <div class="col-md-6" style="display: inline">
-                    <img id="albumArt" height=420px width=420px ng-show="art" ng-click="togglePreview()">
+                    <img id="albumArt" class="stopped" style="height:418px;width:418px;" ng-show="art" ng-click="togglePreview()">
                     <p></p>
-                    <h3>{{album.title}}</h3>
-                    <h5>Artist: {{album.artist}}</h5>
-                    <h5>Year Released: {{album.year}}</h5>
-                    <h5>Genre: {{album.genre}}</h5>
-                    <h5>{{album.tracks}} Tracks</h5>
-                    <div>
-                        <!--
-                        <button class="btn btn-warning" data-toggle="modal" data-target="#updateAlbumModal">
-                            Update Album
-                        </button>
-                        -->
-                        <a href="{{spotifyURL}}"><button class="btn btn-success">
-                            Listen on Spotify
-                        </button></a>
+                    <div ng-show="showAlbums">
+                        <h3>{{album.title}}</h3>
+                        <h5>Artist: {{album.artist}}</h5>
+                        <h5>Released: {{spotifyYear | date:'MMMM d, yyyy'}}</h5>
+                        <h5>Label: {{spotifyLabel}}</h5>
+                        <h5>{{spotifyTracks}} Tracks</h5>
+                        <div>
+                            <!--
+                            <button class="btn btn-warning" data-toggle="modal" data-target="#updateAlbumModal">
+                                Update Album
+                            </button>
+                            -->
+                            <a href="{{spotifyURL}}"><button class="btn btn-success" data-toggle"tooltip" data-placement="top" title="Must have Spotify account to listen">
+                                Listen on Spotify
+                            </button></a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -86,7 +94,6 @@
                         </div>
                         <div class="modal-body">
                             <form name="newAlbumForm" autocomplete="off">
-                                <center style="color: red">All Fields Required</center>
                                 <p></p>
                                 <center><div ng-show="show" class="alert alert-danger">Album already exists</div></center>
                                 <div class="form-group">
@@ -96,18 +103,6 @@
                                 <div class="form-group">
                                     <label for="artist">Artist</label>
                                     <input type="text" class="form-control" id="artist" ng-model="formData.artist" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="year">Year</label>
-                                    <input type="text" class="form-control" id="year" ng-model="formData.year" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="genre">Genre</label>
-                                    <input type="text" class="form-control" id="genre" ng-model="formData.genre" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="tracks">Tracks</label>
-                                    <input type="text" class="form-control" id="tracks" ng-model="formData.tracks" required>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -139,53 +134,5 @@
             </div>
         </div>
 
-        <!-- MODAL FOR UPDATING ALBUMS -->
-        <div class="modal fade" id="updateAlbumModal" tabindex="-1" role="dialog" aria-labelledby="updateAlbumModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="updateAlbumModalLabel">Update Album</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form name="updateAlbumForm" autocomplete="off">
-                                <p></p>
-                                <div class="form-group">
-                                    <label for="title">Title</label>
-                                    <input type="text" class="form-control" id="title" value="{{album.title}}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="artist">Artist</label>
-                                    <input type="text" class="form-control" id="artist" value="{{album.artist}}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="year">Year</label>
-                                    <input type="text" class="form-control" id="year" value="{{album.year}}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="genre">Genre</label>
-                                    <input type="text" class="form-control" id="genre" value="{{album.genre}}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="tracks">Tracks</label>
-                                    <input type="text" class="form-control" id="tracks" value="{{album.tracks}}"required>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-warning" ng-click="formData={}">Clear All</button>
-                                    <button id ="submit" type="submit" value="submit" class="btn btn-success" ng-click="updateAlbumForm.$valid && updateAlbum(album._id)">Submit</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <br></br>
-
     </body>
-
 </html>

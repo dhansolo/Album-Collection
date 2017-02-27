@@ -5,12 +5,18 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
     $scope.name = "David"
     $scope.show = false;
     $scope.art = false;
+    $scope.showAlbums = false;
     $scope.preview;
     $scope.spotifyURL;
+    $scope.artistID;
+    $scope.spotifyYear;
+    $scope.spotifyLabel;
+    $scope.spotifyTracks;
     $scope.selected;
     var audio;
     var firstID;
     var isPlaying = false;
+
 
     /* -------------------- RESTful API -------------------- */
 
@@ -19,9 +25,17 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
         $http.get('/albums')
             .then(function(success) {
                 $scope.albums = success.data;
-                var randNum = Math.floor(Math.random() * ($scope.albums.length -1));
-                firstID = success.data[randNum]._id;
-                $scope.getAlbum(firstID);
+                if($scope.albums.length > 0) {
+                    $scope.showAlbums = true;
+                    var randNum = Math.floor(Math.random() * ($scope.albums.length -1));
+                    firstID = success.data[randNum]._id;
+                    $scope.getAlbum(firstID);
+                } else {
+                    $scope.showAlbums = false;
+                    $scope.art = false;
+                    $('#albumArt').removeClass('stopped');
+                    audio.pause();
+                }
             }, function(error) {
                 console.log('Error: ' + error.data);
             });
@@ -37,8 +51,9 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
                 $scope.getSpotifyAlbum($scope.album.title, $scope.album.artist);
                 $scope.selected = $scope.album._id;
                 $('#albumArt').removeClass('playing');
+                $('#albumArt').addClass('stopped');
                 isPlaying = false;
-                audio.pause();
+                audio.pause(); //Will throw error in console because audio is not yet loaded on initial load
             }, function(error) {
                 console.log('Error: ' + error.data);
             });
@@ -64,7 +79,7 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
             })
     }
 
-    // UPDATE AN ALBUM'S DETAIL AND REFRESH ALBUMS TO UPDATE THE VIEW
+    // UPDATE AN ALBUM'S DETAIL AND REFRESH ALBUMS TO UPDATE THE VIEW (STILL WORKING)
     $scope.updateAlbum = function(id) {
         console.log(id);
         $http.put('/album/' + id, $scope.formData)
@@ -78,14 +93,11 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
 
     // DELETE AN ALBUM AND REFRESH
     $scope.deleteAlbum = function(id) {
-        console.log(id);
         $scope.data = id;
-        console.log($scope.data);
         if(confirm("Are you sure you want to delete the selected album?")) {
             $http.delete('/album/' + id)
                 .then(function(success) {
                     $scope.albums = success.data;
-                    console.log(success.data);
                 }, function(error) {
                     console.log('Error: ' + error.data);
                 });
@@ -96,7 +108,7 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
 
     /* -------------------- SPOTIFY INTEGRATION -------------------- */
 
-    //GET ALBUM ART FROM SPOTIFY
+    //GET ALBUM DETAILS FROM SPOTIFY
     $scope.getSpotifyAlbum = function(title, artist) {
         $http.get('https://api.spotify.com/v1/search?q=' + title + '+' + artist + '&type=album&limit=1')
             .then(function(success) {
@@ -107,6 +119,10 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
                     .then(function(success) {
                         var randNum = Math.floor(Math.random() * 10);
                         $scope.preview = success.data.tracks.items[randNum].preview_url;
+                        $scope.artistID = success.data.artists[0].id;
+                        $scope.spotifyYear = success.data.release_date;
+                        $scope.spotifyLabel = success.data.label;
+                        $scope.spotifyTracks = success.data.tracks.items.length;
                         audio = new Audio($scope.preview);
                     }, function(error) {
                         console.log('Error: ' + error.data);
@@ -121,79 +137,20 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
         isPlaying = !isPlaying;
         if(isPlaying) {
             $('#albumArt').addClass('playing');
+            $('#albumArt').removeClass('stopped');
+            $('#controls').attr('src', 'pics/pause.png');
             audio.play();
         } else {
             $('#albumArt').removeClass('playing');
+            $('#albumArt').addClass('stopped');
+            $('#controls').attr('src', 'pics/play.png');
             audio.pause();
             audio.currentTime = 0;
         }
         audio.addEventListener('ended', function() {
             $('#albumArt').removeClass('playing');
+            $('#albumArt').addClass('stopped');
         });
     }
 
 }]);
-
-
-/* --------------------------------------------------OLD CODE BELOW --------------------------------------------------*/
-
-/*
-(function(app) {
-    "use strict";
-    app.controller('mainController', function($scope, $http) {
-        $scope.formData = {};
-
-        //GET ALL ALBUMS WHEN PAGE LOADS AND SHOW THEM
-        $http.get('/albums')
-            .success(function(data) {
-                $scope.albums = data;
-                console.log(data);
-                console.log($scope);
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
-        
-        //ADD A NEW ALBUM TO THE COLLECTION
-        $scope.newAlbum = function() {
-            $http.post('/album', $scope.formData)
-                .success(function(data) {
-                    $scope.formData = {};
-                    $scope.albums = data;
-                    console.log(data);
-                })
-                .error(function(data) {
-                    console.log('Error: ' + data);
-                });
-        }
-    });
-})(albumModule);*/
-
-/*
-function mainController($scope, $http) {
-    $scope.formData = {};
-
-    //GET ALL ALBUMS WHEN PAGE LOADS AND SHOW THEM
-    $http.get('/albums')
-        .success(function(data) {
-            $scope.albums = data;
-            console.log(data);
-            console.log($scope);
-        })
-        .error(function(data) {
-            console.log('Error: ' + data);
-        });
-    
-    //ADD A NEW ALBUM TO THE COLLECTION
-    $scope.newAlbum = function() {
-        $http.post('/album', $scope.formData)
-            .success(function(data) {
-                $scope.formData = {};
-                $scope.albums = data;
-                console.log(data);
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
-    }
-}*/

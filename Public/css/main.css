@@ -14,6 +14,10 @@
     background-color: #3BAFDA;
 }
 
-.playing {
+.stopped {
     border: 5px solid #E9573F;
+}
+
+.playing {
+    border: 5px solid #8CC152;
 }
