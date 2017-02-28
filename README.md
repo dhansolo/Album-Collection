@@ -17,4 +17,9 @@ How to use:
 - Also when you have populated your collection more, the app will initially start with a randomly selected album in view
 - If you don't have an album in your collection anymore, feel free to delete it from your list
 
+Tools used:
+- MEAN Stack (MongoDB, Express, AngularJS, NodeJS)
+- HTML & CSS
+- MochaJs & ChaiJS
+
 Enjoy!
