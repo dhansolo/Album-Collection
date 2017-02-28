@@ -19,10 +19,9 @@
     <body ng-controller="mainController" style="background-color:#A0CECB">
 
         <!-- MAIN UI -->
-        <br></br>
-        <br></br>
+        <p></p>
         <div class="container" style="color: #3C3B3D">
-            <h1>{{name}}'s Album Collection</h1>
+            <h1>Album Collection</h1>
             <h3>Current Size: {{ albums.length }} Albums</h3>
             <p></p>
 
@@ -61,11 +60,6 @@
                         <h5>Label: {{spotifyLabel}}</h5>
                         <h5>{{spotifyTracks}} Tracks</h5>
                         <div>
-                            <!--
-                            <button class="btn btn-warning" data-toggle="modal" data-target="#updateAlbumModal">
-                                Update Album
-                            </button>
-                            -->
                             <a href="{{spotifyURL}}"><button class="btn btn-success" data-toggle"tooltip" data-placement="top" title="Must have Spotify account to listen">
                                 Listen on Spotify
                             </button></a>
@@ -80,13 +74,14 @@
             <footer>
                 <a href="https://www.spotify.com"><img style="height:3%;width:3%" src="pics/spotify.png"></a> | Created by
                 <a href="https://www.davidhan.me">David Han</a> 
+                <p></p>
             </footer>
 
             <!-- MODAL FOR ADDING NEW ALBUM -->
             <div class="modal fade" id="newAlbumModal" tabindex="-1" role="dialog" aria-labelledby="newAlbumModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header" style="background-color: #428bca; color:#f9f9f9;">
                             <h5 class="modal-title" id="albumModalLabel">New Album</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -120,14 +115,16 @@
         <div class="modal fade" id="deleteAlbumModal" tabindex="-1" role="dialog" aria-labelledby="deleteAlbumModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header" style="background-color:#d9534f; color:#f9f9f9">
                             <h5 class="modal-title" id="deleteAlbumModalLabel">Delete Album</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body" id="albumOption" ng-repeat="album in albums">
-                            <center><button type="button" class="btn btn-secondary btn-block" ng-click="deleteAlbum(album._id)">{{album.title}} - {{album.artist}}</button></center>
+                        <div style="height:625px; overflow-y:auto;">
+                            <div class="modal-body" id="albumOption" ng-repeat="album in albums">
+                                <center><button type="button" class="btn btn-secondary btn-block" ng-click="deleteAlbum(album._id)">{{album.title}} - {{album.artist}}</button></center>
+                            </div>
                         </div>
                     </div>
                 </div>

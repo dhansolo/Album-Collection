@@ -6,6 +6,14 @@
     padding: 2px;
 }
 
+#albumArt:hover {
+    cursor: pointer;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
 .btn-custom {
     background-color: white;
 }
