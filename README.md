@@ -2,11 +2,11 @@
 
 A project I came up with while looking at my album collection. Figured it would be cool to digitize my collection with the help of Spotify's API. Only wish that Spotify allowed for full song streaming. 
 
-How to install:
-1. Install NodeJS, MongoDB, and download this repo
-2. After finishing installing MongoDB, create the 'albums' db within it, the app will look for a db in Mongo with this name
-3. Run 'npm install' to install node modules
-4. Run 'npm app.js' to start app
+How to set up:
+- Install NodeJS, MongoDB, and download this repo
+- After finishing installing MongoDB, create the 'albums' db within it, the app will look for a db in Mongo with this name
+- Run 'npm install' to install node modules
+- Run 'npm app.js' to start app
 
 How to use:
 - Initially, there should not be anything in your collection and much of the app should look blank
