@@ -1,14 +1,3 @@
-/*
-
-THINGS TO DO:
-
-OPTIONAL COOL/GOOD THINGS TO DO:
-- ADD FEATURE TO UPDATE ALBUM DETAILS 
-- ADD PLAY OVERLAY TO ALBUM ART ON HOVER
-- HAVE ALBUM BUTTON BE HIGHLIGHTED ON LOAD IF ALBUM IS SELECTED
-
-*/
-
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
@@ -35,3 +24,12 @@ app.listen(port, function() {
 });
 
 module.exports = app;
+
+/*
+
+OPTIONAL COOL/GOOD THINGS TO DO:
+- ADD FEATURE TO UPDATE ALBUM DETAILS 
+- ADD PLAY OVERLAY TO ALBUM ART ON HOVER
+- HAVE ALBUM BUTTON BE HIGHLIGHTED ON LOAD IF ALBUM IS SELECTED
+
+*/

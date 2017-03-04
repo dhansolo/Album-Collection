@@ -110,23 +110,29 @@ albumModule.controller('mainController', ['$scope', '$http', function($scope, $h
 
     //GET ALBUM DETAILS FROM SPOTIFY
     $scope.getSpotifyAlbum = function(title, artist) {
-        $http.get('https://api.spotify.com/v1/search?q=' + title + '+' + artist + '&type=album&limit=1')
+        $http.get('https://api.spotify.com/v1/search?q=' + title + '+' + artist + '&type=album')
             .then(function(success) {
-                $scope.art = true;
-                $scope.spotifyURL = success.data.albums.items[0].external_urls.spotify;
-                $('#albumArt').attr("src", success.data.albums.items[0].images[0].url);
-                $http.get('https://api.spotify.com/v1/albums/' + success.data.albums.items[0].id)
-                    .then(function(success) {
-                        var randNum = Math.floor(Math.random() * 10);
-                        $scope.preview = success.data.tracks.items[randNum].preview_url;
-                        $scope.artistID = success.data.artists[0].id;
-                        $scope.spotifyYear = success.data.release_date;
-                        $scope.spotifyLabel = success.data.label;
-                        $scope.spotifyTracks = success.data.tracks.items.length;
-                        audio = new Audio($scope.preview);
-                    }, function(error) {
-                        console.log('Error: ' + error.data);
-                    });
+                for(let i = 0; i <= success.data.albums.items.length; i++) {
+                    if(success.data.albums.items[i].album_type === 'album') {
+                        $scope.art = true;
+                        $scope.spotifyURL = success.data.albums.items[i].external_urls.spotify;
+                        $('#albumArt').attr("src", success.data.albums.items[i].images[0].url);
+                        $http.get('https://api.spotify.com/v1/albums/' + success.data.albums.items[i].id)
+                            .then(function(success) {
+                                var randNum = Math.floor(Math.random() * 10);
+                                $scope.preview = success.data.tracks.items[randNum].preview_url;
+                                $scope.artistID = success.data.artists[0].id;
+                                $scope.spotifyYear = success.data.release_date;
+                                $scope.spotifyLabel = success.data.label;
+                                $scope.spotifyTracks = success.data.tracks.items.length;
+                                audio = new Audio($scope.preview);
+                            }, function(error) {
+                                console.log('Error: ' + error.data);
+                            });
+                        console.log('loop broke at i = ' + i);
+                        break;
+                    }
+                }
             }, function(error) {
                 console.log('Error: ' + error.data);
             });
